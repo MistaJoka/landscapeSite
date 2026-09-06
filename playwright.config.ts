@@ -16,7 +16,6 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    env: { ...process.env, PLAYWRIGHT: '1' },
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
@@ -28,6 +27,6 @@ export default defineConfig({
     // background-mode spawner sets on its child to say "just run in the
     // foreground" — setting it here opts back into normal blocking behavior
     // so Playwright can manage the process lifecycle itself.
-    env: { ASTRO_DEV_BACKGROUND: '1' },
+    env: { ASTRO_DEV_BACKGROUND: '1', PLAYWRIGHT: '1' },
   },
 });
