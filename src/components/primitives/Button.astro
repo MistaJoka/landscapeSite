@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 interface Props { href: string; variant?: 'primary' | 'ghost'; class?: string }
 const { href, variant = 'primary', class: className = '' } = Astro.props;
 const base =
@@ -8,4 +9,4 @@ const variants = {
   ghost: 'border border-stone text-ink hover:border-ink',
 };
 ---
-<a href={href} class={`${base} ${variants[variant]} ${className}`}><slot /></a>
+<a href={withBase(href)} class={`${base} ${variants[variant]} ${className}`}><slot /></a>

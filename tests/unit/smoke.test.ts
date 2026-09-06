@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 
 describe('project scaffold', () => {
-  it('targets the production domain', async () => {
+  it('targets the production domain and the Pages preview host', async () => {
     const config = readFileSync('astro.config.mjs', 'utf-8');
-    expect(config).toContain("site: 'https://stonecroplandscape.com'");
+    expect(config).toContain('https://stonecroplandscape.com');
+    expect(config).toContain('https://mistajoka.github.io');
   });
 
   it('exposes the required npm scripts', () => {

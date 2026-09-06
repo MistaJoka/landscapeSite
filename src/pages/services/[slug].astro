@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -96,7 +97,7 @@ const jsonLd = [
         <ul class="mt-6 flex flex-wrap gap-3">
           {relatedAreas.map((area) => (
             <li>
-              <a href={`/areas/${area.id}`} class="rounded-full border border-stone px-5 py-2 hover:border-ink">
+              <a href={withBase(`/areas/${area.id}`)} class="rounded-full border border-stone px-5 py-2 hover:border-ink">
                 {area.data.town}, {area.data.state}
               </a>
             </li>

@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import { Image } from 'astro:assets';
 import Eyebrow from '../primitives/Eyebrow.astro';
 import { resolveImage } from '../../lib/images';
@@ -28,7 +29,7 @@ const cards = await Promise.all(
   >
     {cards.map((card) => (
       <li class="reveal w-[76vw] flex-none snap-start md:w-auto">
-        <a href={`/services/${card.slug}`} class="group flex h-full flex-col">
+        <a href={withBase(`/services/${card.slug}`)} class="group flex h-full flex-col">
           <div class="overflow-hidden rounded-2xl bg-stone">
             <Image
               src={card.image}

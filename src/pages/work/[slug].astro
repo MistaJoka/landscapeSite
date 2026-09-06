@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import type { GetStaticPaths } from 'astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -40,7 +41,7 @@ const shared = { widths: [480, 800, 1400], sizes: '(min-width: 768px) 45vw, 90vw
     <h1 class="max-w-[16ch] text-[length:var(--step-6)]">{project.data.title}</h1>
     <p class="mt-6 text-[length:var(--step-0)] text-ink-muted">
       {project.data.town} — {project.data.year} —
-      <a href={`/services/${service.id}`} class="text-moss underline underline-offset-4">{service.data.title}</a>
+      <a href={withBase(`/services/${service.id}`)} class="text-moss underline underline-offset-4">{service.data.title}</a>
     </p>
     <p class="mt-8 max-w-[var(--measure)] text-[length:var(--step-1)] text-ink-muted">{project.data.summary}</p>
   </Container>

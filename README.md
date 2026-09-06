@@ -11,7 +11,8 @@ brand" below.
 | Command | What it does |
 |---|---|
 | `npm run dev` | Dev server at http://localhost:4321 |
-| `npm run build` | Production build into `dist/` (regenerates placeholder images first) |
+| `npm run build` | Production build for Netlify (regenerates placeholder images first) |
+| `npm run build:pages` | Static build for GitHub Pages — no adapter, no contact endpoint, sub-path `base` |
 | `npm run preview` | Not supported — the Netlify adapter has no preview command. Use `npm run dev`. |
 | `npm run test:unit` | Vitest — schemas, tokens, SEO, structured data, validation |
 | `npm run test:e2e` | Playwright — routes, navigation, forms, accessibility |
@@ -71,6 +72,23 @@ all follow automatically.
 2. Replace the markdown in `src/content/`.
 3. Delete `scripts/generate-placeholders.mjs`, remove the `prebuild` script, and
    drop real photography into `src/assets/images/` using the same filenames.
+
+## Deploy targets
+
+Two builds from one codebase:
+
+- **`npm run build`** targets Netlify. Everything works, including the contact
+  endpoint.
+- **`npm run build:pages`** targets GitHub Pages, which is static-only and
+  serves project sites from a sub-path. It drops the adapter, sets `base`, and
+  removes `/api/contact` (the endpoint lives in `src/endpoints/` and is injected
+  as a route only for the server build — Astro resolves `prerender` from a
+  compile-time literal, so it cannot opt out conditionally). The contact form
+  stays visible for design review but is disabled with a notice, and the whole
+  preview is `noindex` so a placeholder business never lands in search results.
+
+Internal links go through `withBase()` in `src/lib/url.ts`, because Astro does
+not rewrite absolute hrefs when `base` is set.
 
 ## Known gaps
 

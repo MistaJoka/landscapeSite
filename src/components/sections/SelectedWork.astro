@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import { Image } from 'astro:assets';
 import Eyebrow from '../primitives/Eyebrow.astro';
 import { resolveImage } from '../../lib/images';
@@ -20,13 +21,13 @@ const cards = await Promise.all(
         <Eyebrow>Selected work</Eyebrow>
         <h2 class="mt-4 max-w-[16ch] text-[length:var(--step-4)]">A few properties, start to finish.</h2>
       </div>
-      <a href="/work" class="text-[length:var(--step-0)] text-moss underline underline-offset-8">See all work</a>
+      <a href={withBase("/work")} class="text-[length:var(--step-0)] text-moss underline underline-offset-8">See all work</a>
     </div>
 
     <ul class="mt-14 grid gap-10 md:grid-cols-3">
       {cards.map((card) => (
         <li class="reveal">
-          <a href={`/work/${card.slug}`} class="group block">
+          <a href={withBase(`/work/${card.slug}`)} class="group block">
             <div class="overflow-hidden rounded-2xl bg-stone">
               <Image
                 src={card.image}

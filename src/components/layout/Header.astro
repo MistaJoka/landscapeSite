@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import siteConfig from '../../../site.config';
 import MobileMenu from './MobileMenu.astro';
 import Nav from './Nav.astro';
@@ -11,7 +12,7 @@ const tone = transparent
 ---
 <header class={`z-40 ${tone}`}>
   <div class="mx-auto flex w-full max-w-[var(--container)] items-center justify-between px-6 py-5 md:px-10">
-    <a href="/" class="font-[family-name:var(--font-display)] text-[length:var(--step-1)] tracking-tight">
+    <a href={withBase("/")} class="font-[family-name:var(--font-display)] text-[length:var(--step-1)] tracking-tight">
       {siteConfig.business.name}
     </a>
     <div class="flex items-center gap-8">

@@ -15,7 +15,8 @@
     "test": "npm run test:unit && npm run build && npm run test:e2e",
     "placeholders": "node scripts/generate-placeholders.mjs",
     "prebuild": "node scripts/generate-placeholders.mjs",
-    "test:perf": "lhci autorun"
+    "test:perf": "lhci autorun",
+    "build:pages": "DEMO_STATIC=1 astro build"
   },
   "dependencies": {
     "@astrojs/netlify": "^8.2.5",

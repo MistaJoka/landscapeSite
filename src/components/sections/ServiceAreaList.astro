@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import Eyebrow from '../primitives/Eyebrow.astro';
 
 interface Props { areas: { slug: string; town: string; state: string }[] }
@@ -13,7 +14,7 @@ const { areas } = Astro.props;
       {areas.map((area) => (
         <li class="border-b border-stone">
           <a
-            href={`/areas/${area.slug}`}
+            href={withBase(`/areas/${area.slug}`)}
             class="flex items-baseline justify-between py-4 transition-colors duration-[var(--dur-fast)] hover:text-moss"
           >
             <span class="font-[family-name:var(--font-display)] text-[length:var(--step-2)]">{area.town}</span>

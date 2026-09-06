@@ -32,10 +32,12 @@ test.describe('mobile menu', () => {
 
   test('opens, traps focus, closes on Escape, and restores focus', async ({ page }) => {
     await page.goto('/');
-    const toggle = page.getByRole('button', { name: /^menu$/i });
+    // Scoped to the site's header: dev tooling can inject its own "Menu"
+    // button, and the test must not depend on whether that is present.
+    const toggle = page.locator('header').getByRole('button', { name: /^menu$/i });
     await toggle.click();
 
-    const dialog = page.getByRole('dialog', { name: /navigation/i });
+    const dialog = page.locator('header').getByRole('dialog', { name: /navigation/i });
     await expect(dialog).toBeVisible();
 
     await page.keyboard.press('Escape');
@@ -45,8 +47,8 @@ test.describe('mobile menu', () => {
 
   test('navigates from the mobile menu', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: /^menu$/i }).click();
-    await page.getByRole('dialog').getByRole('link', { name: 'Services' }).click();
+    await page.locator('header').getByRole('button', { name: /^menu$/i }).click();
+    await page.locator('header').getByRole('dialog').getByRole('link', { name: 'Services' }).click();
     await expect(page).toHaveURL(/\/services\/?$/);
   });
 });

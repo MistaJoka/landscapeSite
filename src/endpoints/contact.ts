@@ -1,6 +1,11 @@
 import type { APIRoute } from 'astro';
-import { parseSubmission } from '../../lib/contact';
+import { parseSubmission } from '../lib/contact';
+import { withBase } from '../lib/url';
 
+// Astro resolves `prerender` at compile time, so this must stay a literal —
+// a variable here silently falls back to true and the POST handler is dropped.
+// This file is NOT under src/pages — astro.config.mjs injects it as a route
+// only for the server-capable build, so the static host never sees it.
 export const prerender = false;
 
 function html(status: number, heading: string, body: string): Response {
@@ -10,7 +15,7 @@ function html(status: number, heading: string, body: string): Response {
      <style>body{font-family:system-ui,sans-serif;background:#FAF9F6;color:#16181A;margin:0;
      display:grid;place-items:center;min-height:100dvh;padding:2rem;text-align:center}
      a{color:#3F5641}</style></head>
-     <body><main><h1>${heading}</h1><p>${body}</p><p><a href="/contact">Back to the contact page</a></p></main></body></html>`,
+     <body><main><h1>${heading}</h1><p>${body}</p><p><a href="${withBase('/contact')}">Back to the contact page</a></p></main></body></html>`,
     { status, headers: { 'content-type': 'text/html; charset=utf-8' } },
   );
 }
