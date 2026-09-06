@@ -15,5 +15,9 @@ export default defineConfig({
     devFeatures: { edgeFunctions: false, environmentVariables: true, images: true },
   }),
   integrations: [sitemap()],
+  // The dev toolbar injects its own UI (including a button labelled "Menu")
+  // into the page. That collides with real selectors and means tests would be
+  // auditing markup that never ships. Humans keep it in `npm run dev`.
+  devToolbar: { enabled: process.env.PLAYWRIGHT !== '1' },
   vite: { plugins: [tailwindcss()] },
 });
