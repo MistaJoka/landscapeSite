@@ -32,3 +32,6 @@ playwright-report/
 
 # Local Netlify folder
 .netlify
+
+src/assets/images/
+public/og/

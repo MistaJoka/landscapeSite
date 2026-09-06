@@ -1,0 +1,77 @@
+---
+import siteConfig from '../../../site.config';
+---
+<div class="md:hidden">
+  <button
+    type="button"
+    id="menu-toggle"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    class="rounded-full border border-current px-5 py-2 text-[length:var(--step--1)]"
+  >
+    Menu
+  </button>
+
+  <div
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Site navigation"
+    hidden
+    class="fixed inset-0 z-50 flex flex-col bg-paper px-6 py-6 text-ink"
+  >
+    <div class="flex justify-end">
+      <button type="button" id="menu-close" class="rounded-full border border-ink px-5 py-2 text-[length:var(--step--1)]">
+        Close
+      </button>
+    </div>
+    <ul class="mt-16 flex flex-col gap-8">
+      {siteConfig.nav.map((item) => (
+        <li>
+          <a href={item.href} class="font-[family-name:var(--font-display)] text-[length:var(--step-4)]">{item.label}</a>
+        </li>
+      ))}
+    </ul>
+    <a href={siteConfig.business.phoneHref} class="mt-auto text-[length:var(--step-1)] text-moss">
+      {siteConfig.business.phone}
+    </a>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const close = document.getElementById('menu-close');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && close && menu) {
+    const focusables = () =>
+      Array.from(menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+
+    const open = () => {
+      menu.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      focusables()[0]?.focus();
+    };
+
+    const shut = () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      toggle.focus();
+    };
+
+    toggle.addEventListener('click', open);
+    close.addEventListener('click', shut);
+
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') { shut(); return; }
+      if (event.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
+  }
+</script>

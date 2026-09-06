@@ -1,0 +1,22 @@
+---
+import siteConfig from '../../../site.config';
+
+interface Props { class?: string; itemClass?: string }
+const { class: className = '', itemClass = '' } = Astro.props;
+const current = Astro.url.pathname;
+---
+<nav aria-label="Primary" class={className}>
+  <ul class="flex items-center gap-8">
+    {siteConfig.nav.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          aria-current={current.startsWith(item.href) ? 'page' : undefined}
+          class={`text-[length:var(--step-0)] transition-opacity duration-[var(--dur-fast)] hover:opacity-60 aria-[current=page]:underline aria-[current=page]:underline-offset-8 ${itemClass}`}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

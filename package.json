@@ -12,7 +12,9 @@
     "astro": "astro",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "test": "npm run test:unit && npm run build && npm run test:e2e"
+    "test": "npm run test:unit && npm run build && npm run test:e2e",
+    "placeholders": "node scripts/generate-placeholders.mjs",
+    "prebuild": "node scripts/generate-placeholders.mjs"
   },
   "dependencies": {
     "@astrojs/netlify": "^8.2.5",
@@ -32,6 +34,7 @@
     "@playwright/test": "^1.63.0",
     "@vitest/ui": "^4.1.11",
     "jsdom": "^29.1.1",
+    "sharp": "^0.35.4",
     "vitest": "^4.1.11"
   }
 }

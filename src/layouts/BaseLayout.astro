@@ -1,0 +1,41 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import SkipLink from '../components/layout/SkipLink.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Meta from '../components/seo/Meta.astro';
+import { localBusinessJsonLd } from '../lib/schema';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  transparentHeader?: boolean;
+  jsonLd?: object | object[];
+}
+const { title, description, ogImage, noindex, transparentHeader = false, jsonLd } = Astro.props;
+
+const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const schema = [localBusinessJsonLd(Astro.site), ...extra];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Meta title={title} description={description} ogImage={ogImage} noindex={noindex} />
+    <JsonLd schema={schema} />
+    <ClientRouter />
+  </head>
+  <body class="min-h-dvh">
+    <SkipLink />
+    <Header transparent={transparentHeader} />
+    <main id="main"><slot /></main>
+    <Footer />
+    <script>import '../lib/motion.ts';</script>
+  </body>
+</html>

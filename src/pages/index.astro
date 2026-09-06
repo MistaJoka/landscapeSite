@@ -1,13 +1,9 @@
 ---
-import '../styles/global.css';
+import Container from '../components/primitives/Container.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Stonecrop Landscape Co.</title>
-  </head>
-  <body>
-    <h1>Stonecrop Landscape Co.</h1>
-  </body>
-</html>
+<BaseLayout>
+  <Container class="py-32">
+    <h1 class="text-[length:var(--step-6)]">Gardens, stonework, and grounds care for the Hudson Valley.</h1>
+  </Container>
+</BaseLayout>

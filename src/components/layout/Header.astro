@@ -1,0 +1,25 @@
+---
+import siteConfig from '../../../site.config';
+import MobileMenu from './MobileMenu.astro';
+import Nav from './Nav.astro';
+
+interface Props { transparent?: boolean }
+const { transparent = false } = Astro.props;
+const tone = transparent
+  ? 'absolute inset-x-0 top-0 text-paper'
+  : 'sticky top-0 border-b border-stone bg-paper/80 text-ink backdrop-blur-xl';
+---
+<header class={`z-40 ${tone}`}>
+  <div class="mx-auto flex w-full max-w-[var(--container)] items-center justify-between px-6 py-5 md:px-10">
+    <a href="/" class="font-[family-name:var(--font-display)] text-[length:var(--step-1)] tracking-tight">
+      {siteConfig.business.name}
+    </a>
+    <div class="flex items-center gap-8">
+      <Nav class="hidden md:block" />
+      <a href={siteConfig.business.phoneHref} class="hidden text-[length:var(--step-0)] md:inline">
+        {siteConfig.business.phone}
+      </a>
+      <MobileMenu />
+    </div>
+  </div>
+</header>

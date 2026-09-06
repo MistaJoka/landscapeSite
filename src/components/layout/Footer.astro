@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import siteConfig from '../../../site.config';
+
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-stone bg-ink text-paper">
+  <div class="mx-auto grid w-full max-w-[var(--container)] gap-12 px-6 py-20 md:grid-cols-4 md:px-10">
+    <div>
+      <p class="font-[family-name:var(--font-display)] text-[length:var(--step-2)]">{siteConfig.business.name}</p>
+      <address class="mt-4 not-italic opacity-70">
+        {siteConfig.business.address.street}<br />
+        {siteConfig.business.address.city}, {siteConfig.business.address.region} {siteConfig.business.address.postalCode}
+      </address>
+      <a href={siteConfig.business.phoneHref} class="mt-4 block hover:opacity-70">{siteConfig.business.phone}</a>
+      <a href={`mailto:${siteConfig.business.email}`} class="block hover:opacity-70">{siteConfig.business.email}</a>
+    </div>
+
+    <div>
+      <h2 class="text-[length:var(--step--1)] uppercase tracking-[0.14em] opacity-60">Services</h2>
+      <ul class="mt-4 space-y-2">
+        {services.map((service) => (
+          <li><a href={`/services/${service.id}`} class="opacity-80 hover:opacity-100">{service.data.title}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-[length:var(--step--1)] uppercase tracking-[0.14em] opacity-60">Service area</h2>
+      <ul class="mt-4 space-y-2">
+        {areas.map((area) => (
+          <li><a href={`/areas/${area.id}`} class="opacity-80 hover:opacity-100">{area.data.town}, {area.data.state}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-[length:var(--step--1)] uppercase tracking-[0.14em] opacity-60">Hours</h2>
+      <ul class="mt-4 space-y-2 opacity-80">
+        {siteConfig.business.hours.map((line) => <li>{line}</li>)}
+      </ul>
+      <ul class="mt-6 space-y-2">
+        {siteConfig.social.map((link) => (
+          <li><a href={link.href} rel="me noopener" class="opacity-80 hover:opacity-100">{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mx-auto w-full max-w-[var(--container)] px-6 pb-10 text-[length:var(--step--1)] opacity-60 md:px-10">
+    &copy; {year} {siteConfig.business.name}. All rights reserved.
+  </div>
+</footer>
