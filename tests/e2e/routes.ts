@@ -1,0 +1,27 @@
+// Shared route manifest. Deliberately a plain module, not a .spec file:
+// importing one spec from another registers its tests twice.
+export const ROUTES = [
+  '/',
+  '/services',
+  '/services/garden-design',
+  '/services/patios-stonework',
+  '/services/lawn-grounds-care',
+  '/services/irrigation-drainage',
+  '/services/seasonal-cleanup',
+  '/work',
+  '/work/tioronda-terrace',
+  '/work/chestnut-ridge-garden',
+  '/work/rhinebeck-farmhouse-grounds',
+  '/work/wallkill-drainage',
+  '/work/kingston-stoop-steps',
+  '/work/hudson-courtyard',
+  '/areas/beacon',
+  '/areas/cold-spring',
+  '/areas/rhinebeck',
+  '/areas/new-paltz',
+  '/areas/kingston',
+  '/areas/hudson',
+  '/about',
+  '/contact',
+  '/404',
+] as const;

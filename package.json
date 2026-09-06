@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run build && npm run test:e2e",
     "placeholders": "node scripts/generate-placeholders.mjs",
-    "prebuild": "node scripts/generate-placeholders.mjs"
+    "prebuild": "node scripts/generate-placeholders.mjs",
+    "test:perf": "lhci autorun"
   },
   "dependencies": {
     "@astrojs/netlify": "^8.2.5",
