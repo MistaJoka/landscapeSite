@@ -1,0 +1,15 @@
+---
+import Button from '../primitives/Button.astro';
+
+interface Props { headline: string; body: string }
+const { headline, body } = Astro.props;
+---
+<section aria-label="Get started" class="bg-ink py-24 text-paper md:py-36">
+  <div class="mx-auto w-full max-w-[var(--container-text)] px-6 text-center md:px-10">
+    <h2 class="text-[length:var(--step-5)]">{headline}</h2>
+    <p class="mx-auto mt-6 max-w-[46ch] text-[length:var(--step-1)] opacity-75">{body}</p>
+    <div class="mt-10 flex justify-center">
+      <Button href="/contact">Request a quote</Button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import Eyebrow from '../primitives/Eyebrow.astro';
+import { resolveImage } from '../../lib/images';
+
+interface ProjectCard {
+  slug: string; title: string; town: string; year: number;
+  summary: string; imagePath: string; imageAlt: string;
+}
+interface Props { projects: ProjectCard[] }
+const { projects } = Astro.props;
+const cards = await Promise.all(
+  projects.map(async (project) => ({ ...project, image: await resolveImage(project.imagePath) })),
+);
+---
+<section aria-label="Selected work" class="bg-paper-raised py-20 md:py-32">
+  <div class="mx-auto w-full max-w-[var(--container)] px-6 md:px-10">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <Eyebrow>Selected work</Eyebrow>
+        <h2 class="mt-4 max-w-[16ch] text-[length:var(--step-4)]">A few properties, start to finish.</h2>
+      </div>
+      <a href="/work" class="text-[length:var(--step-0)] text-moss underline underline-offset-8">See all work</a>
+    </div>
+
+    <ul class="mt-14 grid gap-10 md:grid-cols-3">
+      {cards.map((card) => (
+        <li class="reveal">
+          <a href={`/work/${card.slug}`} class="group block">
+            <div class="overflow-hidden rounded-2xl bg-stone">
+              <Image
+                src={card.image}
+                alt={card.imageAlt}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 768px) 33vw, 90vw"
+                loading="lazy"
+                class="aspect-[4/3] w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.03]"
+              />
+            </div>
+            <h3 class="mt-5 text-[length:var(--step-1)]">{card.title}</h3>
+            <p class="mt-1 text-[length:var(--step--1)] text-ink-muted">{card.town} — {card.year}</p>
+            <p class="mt-3 max-w-[40ch] text-ink-muted">{card.summary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

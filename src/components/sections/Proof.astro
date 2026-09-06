@@ -1,0 +1,29 @@
+---
+interface Props {
+  testimonial: { quote: string; attribution: string; town: string };
+  credentials: string[];
+  yearsInBusiness: number;
+}
+const { testimonial, credentials, yearsInBusiness } = Astro.props;
+---
+<section aria-label="Why me" class="bg-moss py-20 text-paper md:py-32">
+  <div class="mx-auto grid w-full max-w-[var(--container)] gap-14 px-6 md:grid-cols-[3fr_2fr] md:px-10">
+    <figure>
+      <blockquote class="font-[family-name:var(--font-display)] text-[length:var(--step-4)] leading-[1.15]">
+        &ldquo;{testimonial.quote}&rdquo;
+      </blockquote>
+      <figcaption class="mt-8 text-[length:var(--step-0)] opacity-80">
+        {testimonial.attribution}, {testimonial.town}
+      </figcaption>
+    </figure>
+
+    <ul class="space-y-5 self-center">
+      <li class="border-t border-paper/25 pt-4 text-[length:var(--step-1)]">
+        {yearsInBusiness} years working in the Hudson Valley
+      </li>
+      {credentials.map((credential) => (
+        <li class="border-t border-paper/25 pt-4 text-[length:var(--step-1)]">{credential}</li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import siteConfig from '../../../site.config';
+import Button from '../primitives/Button.astro';
+import { resolveImage } from '../../lib/images';
+
+interface Props { headline: string; lede: string; imagePath: string; imageAlt: string }
+const { headline, lede, imagePath, imageAlt } = Astro.props;
+const image = await resolveImage(imagePath);
+---
+<section aria-label="Hero" class="relative flex min-h-[92svh] items-end overflow-hidden bg-ink">
+  <Image
+    src={image}
+    alt={imageAlt}
+    widths={[640, 1024, 1600, 2400]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-ink/25"></div>
+
+  <div class="relative mx-auto w-full max-w-[var(--container)] px-6 pb-20 pt-40 text-paper md:px-10 md:pb-28">
+    <h1 class="max-w-[14ch] text-[length:var(--step-6)]">{headline}</h1>
+    <p class="mt-7 max-w-[46ch] text-[length:var(--step-1)] opacity-85">{lede}</p>
+    <div class="mt-10 flex flex-wrap items-center gap-4">
+      <Button href="/contact">Request a quote</Button>
+      <a
+        href={siteConfig.business.phoneHref}
+        class="rounded-full border border-paper/40 px-7 py-3.5 text-[length:var(--step-0)] transition-colors duration-[var(--dur-fast)] hover:border-paper"
+      >
+        {siteConfig.business.phone}
+      </a>
+    </div>
+  </div>
+</section>

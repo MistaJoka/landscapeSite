@@ -1,0 +1,26 @@
+---
+import Eyebrow from '../primitives/Eyebrow.astro';
+
+interface Props { areas: { slug: string; town: string; state: string }[] }
+const { areas } = Astro.props;
+---
+<section aria-label="Service area" class="bg-paper py-20 md:py-28">
+  <div class="mx-auto w-full max-w-[var(--container)] px-6 md:px-10">
+    <Eyebrow>Service area</Eyebrow>
+    <h2 class="mt-4 max-w-[20ch] text-[length:var(--step-4)]">Six towns, roughly forty minutes from Beacon.</h2>
+
+    <ul class="mt-12 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+      {areas.map((area) => (
+        <li class="border-b border-stone">
+          <a
+            href={`/areas/${area.slug}`}
+            class="flex items-baseline justify-between py-4 transition-colors duration-[var(--dur-fast)] hover:text-moss"
+          >
+            <span class="font-[family-name:var(--font-display)] text-[length:var(--step-2)]">{area.town}</span>
+            <span class="text-[length:var(--step--1)] text-ink-muted">{area.state}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

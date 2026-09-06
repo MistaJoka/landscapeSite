@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import Eyebrow from '../primitives/Eyebrow.astro';
+import { resolveImage } from '../../lib/images';
+
+interface Project {
+  title: string;
+  town: string;
+  beforeImage: string;
+  beforeAlt: string;
+  afterImage: string;
+  afterAlt: string;
+}
+interface Props { title: string; project: Project }
+const { title, project } = Astro.props;
+
+const before = await resolveImage(project.beforeImage);
+const after = await resolveImage(project.afterImage);
+const shared = { widths: [640, 1024, 1600], sizes: '100vw', loading: 'lazy' as const };
+---
+<section aria-label="Before and after" class="bg-ink text-paper">
+  <div class="mx-auto w-full max-w-[var(--container)] px-6 py-20 md:px-10 md:py-28">
+    <Eyebrow class="text-paper/60">One property</Eyebrow>
+    <h2 class="mt-4 max-w-[18ch] text-[length:var(--step-4)]">{title}</h2>
+    <p class="mt-4 text-[length:var(--step-0)] opacity-70">{project.title} — {project.town}</p>
+  </div>
+
+  <!-- Tall track gives the sticky stage its scroll distance. -->
+  <div class="wipe-track relative h-[220svh] md:h-[260svh]">
+    <div class="wipe-stage sticky top-0 flex h-svh items-center overflow-hidden">
+      <div class="relative h-full w-full">
+        <Image src={before} alt={project.beforeAlt} {...shared} class="absolute inset-0 h-full w-full object-cover" />
+        <Image
+          src={after}
+          alt={project.afterAlt}
+          {...shared}
+          class="wipe-layer absolute inset-0 h-full w-full object-cover"
+        />
+
+        <p class="absolute bottom-8 left-6 rounded-full bg-ink/70 px-4 py-2 text-[length:var(--step--1)] backdrop-blur md:left-10">
+          Before
+        </p>
+        <p class="absolute bottom-8 right-6 rounded-full bg-paper/85 px-4 py-2 text-[length:var(--step--1)] text-ink backdrop-blur md:right-10">
+          After
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,9 +1,86 @@
 ---
-import Container from '../components/primitives/Container.astro';
+import { getCollection } from 'astro:content';
+import siteConfig from '../../site.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BeforeAfter from '../components/sections/BeforeAfter.astro';
+import ClosingCTA from '../components/sections/ClosingCTA.astro';
+import Hero from '../components/sections/Hero.astro';
+import OfferingStrip from '../components/sections/OfferingStrip.astro';
+import ProcessSteps from '../components/sections/ProcessSteps.astro';
+import Proof from '../components/sections/Proof.astro';
+import SelectedWork from '../components/sections/SelectedWork.astro';
+import ServiceAreaList from '../components/sections/ServiceAreaList.astro';
+
+const byOrder = <T extends { data: { order: number } }>(a: T, b: T) => a.data.order - b.data.order;
+
+const services = (await getCollection('services')).sort(byOrder).map((service) => ({
+  slug: service.id,
+  title: service.data.title,
+  summary: service.data.summary,
+  startingPrice: service.data.startingPrice,
+  imagePath: service.data.heroImage,
+  imageAlt: service.data.heroAlt,
+}));
+
+const allProjects = (await getCollection('projects')).sort(byOrder);
+const featured = allProjects.find((project) => project.id === 'tioronda-terrace');
+if (!featured) throw new Error('Home page requires the "tioronda-terrace" project entry.');
+
+const selected = allProjects.slice(0, 3).map((project) => ({
+  slug: project.id,
+  title: project.data.title,
+  town: project.data.town,
+  year: project.data.year,
+  summary: project.data.summary,
+  imagePath: project.data.afterImage,
+  imageAlt: project.data.afterAlt,
+}));
+
+const areas = (await getCollection('areas')).sort(byOrder).map((area) => ({
+  slug: area.id,
+  town: area.data.town,
+  state: area.data.state,
+}));
+
+const testimonials = (await getCollection('testimonials')).sort(byOrder);
+const lead = testimonials[0];
+if (!lead) throw new Error('Home page requires at least one testimonial entry.');
+
+const steps = [
+  { title: 'We walk the property', body: 'An hour on site, together. Light, drainage, soil, what you use and what you avoid. No charge, no obligation.' },
+  { title: 'You get a plan and a price', body: 'A written scope with a drawing where it helps, a fixed price, and a phased budget if the work should happen in stages.' },
+  { title: 'I build it and keep it', body: 'One person on site from first cut to final sweep, and a maintenance schedule afterward if you want one.' },
+];
 ---
-<BaseLayout>
-  <Container class="py-32">
-    <h1 class="text-[length:var(--step-6)]">Gardens, stonework, and grounds care for the Hudson Valley.</h1>
-  </Container>
+<BaseLayout transparentHeader>
+  <Hero
+    headline="Gardens, stonework, and grounds care for the Hudson Valley."
+    lede="Ellis Vance designs, builds, and maintains outdoor space across Beacon, Cold Spring, Rhinebeck, New Paltz, Kingston, and Hudson. One person on every job, start to finish."
+    imagePath="/images/hero.jpg"
+    imageAlt="A dry-laid bluestone terrace edged with deep perennial planting in late afternoon light."
+  />
+  <OfferingStrip services={services} />
+  <BeforeAfter
+    title="The same side yard, eighteen months apart."
+    project={{
+      title: featured.data.title,
+      town: featured.data.town,
+      beforeImage: featured.data.beforeImage,
+      beforeAlt: featured.data.beforeAlt,
+      afterImage: featured.data.afterImage,
+      afterAlt: featured.data.afterAlt,
+    }}
+  />
+  <ProcessSteps steps={steps} />
+  <SelectedWork projects={selected} />
+  <Proof
+    testimonial={{ quote: lead.data.quote, attribution: lead.data.attribution, town: lead.data.town }}
+    credentials={siteConfig.business.credentials}
+    yearsInBusiness={new Date().getFullYear() - siteConfig.business.foundedYear}
+  />
+  <ServiceAreaList areas={areas} />
+  <ClosingCTA
+    headline="Tell me about your property."
+    body="Send a few photos and what is bothering you about the space. I answer every message myself, usually within a day."
+  />
 </BaseLayout>
