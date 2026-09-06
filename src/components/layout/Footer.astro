@@ -50,6 +50,6 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="mx-auto w-full max-w-[var(--container)] px-6 pb-10 text-[length:var(--step--1)] opacity-60 md:px-10">
-    &copy; {year} {siteConfig.business.name}. All rights reserved.
+    &copy; {year} {siteConfig.business.name.replace(/\.$/, '')}. All rights reserved.
   </div>
 </footer>

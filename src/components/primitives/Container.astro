@@ -1,10 +1,23 @@
 ---
 interface Props { width?: 'default' | 'text' | 'full'; as?: string; class?: string }
 const { width = 'default', as: Tag = 'div', class: className = '' } = Astro.props;
+
+const gutter = 'mx-auto w-full max-w-[var(--container)] px-6 md:px-10';
 const widths = {
-  default: 'mx-auto w-full max-w-[var(--container)] px-6 md:px-10',
-  text: 'container-text mx-auto w-full max-w-[var(--container-text)] px-6 md:px-10',
+  default: gutter,
+  text: gutter,
   full: 'w-full',
 };
 ---
-<Tag class={`${widths[width]} ${className}`}><slot /></Tag>
+{
+  width === 'text' ? (
+    // Prose keeps a readable measure but stays flush with the page's left
+    // gutter. Centring it inside the wide container made long-form sections
+    // look misaligned against every other block on the page.
+    <Tag class={`${gutter} ${className}`}>
+      <div class="container-text w-full max-w-[var(--container-text)]"><slot /></div>
+    </Tag>
+  ) : (
+    <Tag class={`${widths[width]} ${className}`}><slot /></Tag>
+  )
+}
