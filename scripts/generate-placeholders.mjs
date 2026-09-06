@@ -3,9 +3,10 @@ import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 
 const OUT = 'src/assets/images';
+export const OG_FILE = 'public/og/default.jpg';
 const PALETTE = ['#3F5641', '#5C6169', '#2C3D2E', '#6B7A5E', '#4A5568'];
 
-const FILES = [
+export const FILES = [
   ['hero.jpg', 2400, 1600, 'Hero'],
   ['about-portrait.jpg', 1200, 1500, 'Portrait'],
   ['services/garden-design.jpg', 1600, 1200, 'Garden Design'],
@@ -36,6 +37,7 @@ function svg(width, height, label, color) {
   </svg>`);
 }
 
+async function generate() {
 let index = 0;
 for (const [name, width, height, label] of FILES) {
   const target = join(OUT, name);
@@ -55,3 +57,7 @@ await writeFile(
 );
 
 console.log(`generated ${FILES.length + 1} placeholder images`);
+}
+
+// Only generate when invoked directly, so tests can import the manifest.
+if (import.meta.url === `file://${process.argv[1]}`) await generate();
