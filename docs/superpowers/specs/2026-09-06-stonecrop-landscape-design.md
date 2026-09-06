@@ -57,7 +57,7 @@ phone number and failing if either appears outside `site.config.ts`.
 
 | Concern | Choice | Rationale |
 |---|---|---|
-| Framework | Astro 5 | Zero JS by default; islands for the few interactive parts |
+| Framework | Astro 7 | Zero JS by default; islands for the few interactive parts |
 | Styling | Tailwind CSS 4 | Utility-first, with design tokens defined in CSS custom properties |
 | Language | TypeScript, `strict: true` | Content schemas are type-checked at build |
 | Content | Astro Content Collections + Zod | Build fails on invalid or thin content |

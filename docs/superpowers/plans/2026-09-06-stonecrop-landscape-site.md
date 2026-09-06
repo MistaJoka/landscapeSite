@@ -4,15 +4,15 @@
 
 **Goal:** Build a 23-page marketing website for a solo landscape operator that presents the business offering within the first two viewports, reads as high-design rather than templated, and generates its service and service-area pages from validated content files.
 
-**Architecture:** Astro 5 static site with Tailwind 4. Services, areas, projects, and testimonials are Astro Content Collections validated by Zod; two dynamic route files generate all eleven sub-pages at build time. Motion is native CSS (View Transitions API for page changes, scroll-driven animations for reveals) so the site ships almost no JavaScript. A single on-demand route handles contact form submission.
+**Architecture:** Astro 7 static site with Tailwind 4. Services, areas, projects, and testimonials are Astro Content Collections validated by Zod; two dynamic route files generate all eleven sub-pages at build time. Motion is native CSS (View Transitions API for page changes, scroll-driven animations for reveals) so the site ships almost no JavaScript. A single on-demand route handles contact form submission.
 
-**Tech Stack:** Astro 5, Tailwind CSS 4 (`@tailwindcss/vite`), TypeScript strict, Zod (via `astro:content`), Vitest + Astro Container API, Playwright + `@axe-core/playwright`, Lighthouse CI, `@astrojs/netlify`, `@fontsource`.
+**Tech Stack:** Astro 7, Tailwind CSS 4 (`@tailwindcss/vite`), TypeScript strict, Zod (via `astro:content`), Vitest + Astro Container API, Playwright + `@axe-core/playwright`, Lighthouse CI, `@astrojs/netlify`, `@fontsource`.
 
 **Spec:** `docs/superpowers/specs/2026-09-06-stonecrop-landscape-design.md`
 
 ## Global Constraints
 
-- **Node:** 20.11 or newer. **Package manager:** npm.
+- **Node:** 22.12 or newer (Astro 7 declares `engines.node >=22.12.0`). **Package manager:** npm.
 - **TypeScript:** `strict: true`. No `any` in committed code.
 - **Brand strings are data.** The business name, phone number, and email may appear only in `site.config.ts` and `src/content/**`. Never in a component. Task 2 adds a test enforcing this.
 - **One accent color.** `--moss` is the only accent. Do not introduce a second.
@@ -4985,7 +4985,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
