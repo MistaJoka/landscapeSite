@@ -1,0 +1,13 @@
+---
+interface Props { id?: string; tone?: 'paper' | 'raised' | 'ink' | 'moss'; class?: string }
+const { id, tone = 'paper', class: className = '' } = Astro.props;
+const tones = {
+  paper: 'bg-paper text-ink',
+  raised: 'bg-paper-raised text-ink',
+  ink: 'bg-ink text-paper',
+  moss: 'bg-moss text-paper',
+};
+---
+<section id={id} class={`py-20 md:py-32 ${tones[tone]} ${className}`}>
+  <slot />
+</section>

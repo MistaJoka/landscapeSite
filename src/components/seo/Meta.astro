@@ -1,0 +1,24 @@
+---
+import siteConfig from '../../../site.config';
+import { absoluteUrl, canonical, pageTitle } from '../../lib/seo';
+
+interface Props { title?: string; description?: string; ogImage?: string; noindex?: boolean }
+const { title, description, ogImage, noindex = false } = Astro.props;
+
+const resolvedTitle = pageTitle(title);
+const resolvedDescription = description ?? siteConfig.seo.defaultDescription;
+const url = canonical(Astro.url.pathname, Astro.site);
+const image = absoluteUrl(ogImage ?? siteConfig.seo.ogImage, Astro.site);
+---
+<title>{resolvedTitle}</title>
+<meta name="description" content={resolvedDescription} />
+<link rel="canonical" href={url} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={siteConfig.business.name} />
+<meta property="og:title" content={resolvedTitle} />
+<meta property="og:description" content={resolvedDescription} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={image} />
+<meta name="twitter:card" content="summary_large_image" />
