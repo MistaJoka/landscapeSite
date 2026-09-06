@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import siteConfig from '../../site.config';
+import PageLayout from '../layouts/PageLayout.astro';
+import Container from '../components/primitives/Container.astro';
+import Eyebrow from '../components/primitives/Eyebrow.astro';
+import ClosingCTA from '../components/sections/ClosingCTA.astro';
+import { resolveImage } from '../lib/images';
+import { breadcrumbJsonLd } from '../lib/schema';
+import { canonical } from '../lib/seo';
+
+const portrait = await resolveImage('/images/about-portrait.jpg');
+const testimonials = (await getCollection('testimonials')).sort((a, b) => a.data.order - b.data.order);
+const years = new Date().getFullYear() - siteConfig.business.foundedYear;
+
+const jsonLd = breadcrumbJsonLd([
+  { name: 'Home', url: canonical('/', Astro.site) },
+  { name: 'About', url: canonical('/about', Astro.site) },
+]);
+---
+<PageLayout
+  title={`${siteConfig.business.operator}, and nobody else.`}
+  eyebrow="About"
+  lede={`${years} years working Hudson Valley properties. I quote the job, I do the job, and I am the person you call afterward.`}
+  description={`${siteConfig.business.operator} is a solo landscape designer and builder working across the Hudson Valley.`}
+  jsonLd={jsonLd}
+>
+  <section aria-label="Portrait" class="bg-paper py-8">
+    <Container>
+      <Image
+        src={portrait}
+        alt={`${siteConfig.business.operator} standing in a garden bed with hand tools.`}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 768px) 50vw, 90vw"
+        loading="lazy"
+        class="aspect-[4/5] w-full max-w-xl rounded-3xl object-cover"
+      />
+    </Container>
+  </section>
+
+  <Container width="text" class="py-16 text-[length:var(--step-1)] text-ink-muted">
+    <p>
+      Most landscape companies solve the scheduling problem by adding crews. That works, and it is
+      why the person who walked your property is rarely the person who shows up to work on it.
+    </p>
+    <p class="mt-6">
+      I solved it differently: I cap the number of properties I take. Twelve maintenance clients,
+      and a handful of design and stonework projects a year. It means I turn work away, and it means
+      I can prune a shrub on the shrub's schedule instead of the route's.
+    </p>
+    <p class="mt-6">
+      I trained in horticulture before I trained in stonework, which shapes the order I do things in.
+      Water first, then soil, then plants, then stone. Skipping that order is why most landscapes
+      start failing in year three.
+    </p>
+  </Container>
+
+  <section aria-label="Credentials" class="bg-paper-raised py-16">
+    <Container>
+      <Eyebrow>Credentials</Eyebrow>
+      <ul class="mt-8 divide-y divide-stone border-t border-stone">
+        <li class="py-5 text-[length:var(--step-1)]">Working in the Hudson Valley since {siteConfig.business.foundedYear}</li>
+        {siteConfig.business.credentials.map((credential) => (
+          <li class="py-5 text-[length:var(--step-1)]">{credential}</li>
+        ))}
+      </ul>
+    </Container>
+  </section>
+
+  <section aria-label="What clients say" class="bg-paper py-20">
+    <Container>
+      <Eyebrow>What clients say</Eyebrow>
+      <ul class="mt-10 grid gap-10 md:grid-cols-2">
+        {testimonials.map((testimonial) => (
+          <li class="reveal border-t border-stone pt-6">
+            <figure>
+              <blockquote class="text-[length:var(--step-1)]">&ldquo;{testimonial.data.quote}&rdquo;</blockquote>
+              <figcaption class="mt-4 text-[length:var(--step--1)] text-ink-muted">
+                {testimonial.data.attribution}, {testimonial.data.town}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </section>
+
+  <ClosingCTA
+    headline="Tell me about your property."
+    body="Send a few photos and what is bothering you about the space. I answer every message myself, usually within a day."
+  />
+</PageLayout>

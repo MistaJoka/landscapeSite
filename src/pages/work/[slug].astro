@@ -1,0 +1,79 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/primitives/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import ClosingCTA from '../../components/sections/ClosingCTA.astro';
+import { resolveImage } from '../../lib/images';
+import { breadcrumbJsonLd } from '../../lib/schema';
+import { canonical } from '../../lib/seo';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+};
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const before = await resolveImage(project.data.beforeImage);
+const after = await resolveImage(project.data.afterImage);
+const service = await getEntry('services', project.data.service);
+if (!service) {
+  throw new Error(`Project "${project.id}" references missing service "${project.data.service}".`);
+}
+
+const url = canonical(`/work/${project.id}`, Astro.site);
+const jsonLd = breadcrumbJsonLd([
+  { name: 'Home', url: canonical('/', Astro.site) },
+  { name: 'Work', url: canonical('/work', Astro.site) },
+  { name: project.data.title, url },
+]);
+
+const shared = { widths: [480, 800, 1400], sizes: '(min-width: 768px) 45vw, 90vw', loading: 'lazy' as const };
+---
+<BaseLayout title={project.data.title} description={project.data.summary} jsonLd={jsonLd}>
+  <Container class="pb-14 pt-20 md:pt-28">
+    <Eyebrow class="mb-5">Work</Eyebrow>
+    <h1 class="max-w-[16ch] text-[length:var(--step-6)]">{project.data.title}</h1>
+    <p class="mt-6 text-[length:var(--step-0)] text-ink-muted">
+      {project.data.town} — {project.data.year} —
+      <a href={`/services/${service.id}`} class="text-moss underline underline-offset-4">{service.data.title}</a>
+    </p>
+    <p class="mt-8 max-w-[var(--measure)] text-[length:var(--step-1)] text-ink-muted">{project.data.summary}</p>
+  </Container>
+
+  <section aria-label="Before and after" class="bg-paper-raised py-16">
+    <Container>
+      <div class="grid gap-6 md:grid-cols-2">
+        <figure>
+          <Image src={before} alt={project.data.beforeAlt} {...shared} class="aspect-[4/3] w-full rounded-2xl object-cover" />
+          <figcaption class="mt-3 text-[length:var(--step--1)] text-ink-muted">Before</figcaption>
+        </figure>
+        <figure>
+          <Image src={after} alt={project.data.afterAlt} {...shared} class="aspect-[4/3] w-full rounded-2xl object-cover" />
+          <figcaption class="mt-3 text-[length:var(--step--1)] text-ink-muted">After</figcaption>
+        </figure>
+      </div>
+    </Container>
+  </section>
+
+  <section aria-label="Scope of work" class="bg-paper py-20">
+    <Container width="text">
+      <Eyebrow>Scope of work</Eyebrow>
+      <ul class="mt-8 divide-y divide-stone border-t border-stone">
+        {project.data.scope.map((item) => (
+          <li class="py-4 text-[length:var(--step-1)]">{item}</li>
+        ))}
+      </ul>
+      <div class="mt-12 text-ink-muted"><Content /></div>
+    </Container>
+  </section>
+
+  <ClosingCTA
+    headline="Tell me about your property."
+    body="Send a few photos and what is bothering you about the space. I answer every message myself, usually within a day."
+  />
+</BaseLayout>

@@ -28,7 +28,7 @@ const cards = await Promise.all(
   >
     {cards.map((card) => (
       <li class="reveal w-[76vw] flex-none snap-start md:w-auto">
-        <a href={`/services/${card.slug}`} class="group block h-full">
+        <a href={`/services/${card.slug}`} class="group flex h-full flex-col">
           <div class="overflow-hidden rounded-2xl bg-stone">
             <Image
               src={card.image}
@@ -41,7 +41,7 @@ const cards = await Promise.all(
           </div>
           <h3 class="mt-5 text-[length:var(--step-1)]">{card.title}</h3>
           <p class="mt-2 text-[length:var(--step--1)] text-ink-muted">{card.summary}</p>
-          <p class="mt-3 text-[length:var(--step--1)] text-moss">{card.startingPrice}</p>
+          <p class="mt-auto pt-3 text-[length:var(--step--1)] text-moss">{card.startingPrice}</p>
         </a>
       </li>
     ))}

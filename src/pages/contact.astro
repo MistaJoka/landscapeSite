@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import siteConfig from '../../site.config';
+import PageLayout from '../layouts/PageLayout.astro';
+import Container from '../components/primitives/Container.astro';
+import Eyebrow from '../components/primitives/Eyebrow.astro';
+import { breadcrumbJsonLd } from '../lib/schema';
+import { canonical } from '../lib/seo';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+
+const jsonLd = breadcrumbJsonLd([
+  { name: 'Home', url: canonical('/', Astro.site) },
+  { name: 'Contact', url: canonical('/contact', Astro.site) },
+]);
+
+const field = 'mt-2 w-full rounded-xl border border-stone bg-paper-raised px-4 py-3 text-[length:var(--step-0)] focus:border-moss';
+const label = 'block text-[length:var(--step--1)] font-medium';
+const error = 'mt-2 block text-[length:var(--step--1)] text-moss-deep';
+---
+<PageLayout
+  title="Tell me about your property."
+  eyebrow="Contact"
+  lede="Send a few photos and what is bothering you about the space. I answer every message myself, usually within a day."
+  description="Request a landscape quote from Ellis Vance across Beacon, Cold Spring, Rhinebeck, New Paltz, Kingston, and Hudson."
+  jsonLd={jsonLd}
+>
+  <Container class="pb-24">
+    <div class="grid gap-16 md:grid-cols-[3fr_2fr]">
+      <form id="contact-form" action="/api/contact" method="post" novalidate class="relative space-y-7">
+        <p role="status" aria-live="polite" id="form-status" class="hidden rounded-xl bg-moss px-5 py-4 text-paper"></p>
+        <p id="form-error" class="hidden text-moss-deep"></p>
+
+        <div>
+          <label class={label} for="name">Your name</label>
+          <input class={field} id="name" name="name" type="text" autocomplete="name" required />
+          <span class={`${error} hidden`} data-error-for="name"></span>
+        </div>
+
+        <div class="grid gap-7 sm:grid-cols-2">
+          <div>
+            <label class={label} for="email">Email</label>
+            <input class={field} id="email" name="email" type="email" autocomplete="email" required />
+            <span class={`${error} hidden`} data-error-for="email"></span>
+          </div>
+          <div>
+            <label class={label} for="phone">Phone <span class="text-ink-muted">(optional)</span></label>
+            <input class={field} id="phone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="grid gap-7 sm:grid-cols-2">
+          <div>
+            <label class={label} for="town">Town</label>
+            <input class={field} id="town" name="town" type="text" list="towns" required />
+            <datalist id="towns">{areas.map((area) => <option value={area.data.town}></option>)}</datalist>
+            <span class={`${error} hidden`} data-error-for="town"></span>
+          </div>
+          <div>
+            <label class={label} for="service">What do you need?</label>
+            <select class={field} id="service" name="service" required>
+              <option value="">Choose one</option>
+              {services.map((service) => <option value={service.id}>{service.data.title}</option>)}
+              <option value="not-sure">Not sure yet</option>
+            </select>
+            <span class={`${error} hidden`} data-error-for="service"></span>
+          </div>
+        </div>
+
+        <div>
+          <label class={label} for="message">About the property</label>
+          <textarea class={field} id="message" name="message" rows="6" required></textarea>
+          <span class={`${error} hidden`} data-error-for="message"></span>
+        </div>
+
+        <!-- Honeypot: positioned off-screen rather than display:none, which some bots detect. -->
+        <div class="absolute left-[-9999px] top-0" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="startedAt" id="startedAt" value="0" />
+
+        <button
+          type="submit"
+          class="rounded-full bg-moss px-8 py-4 text-[length:var(--step-0)] font-medium text-paper transition-colors duration-[var(--dur-fast)] hover:bg-moss-deep"
+        >
+          Send message
+        </button>
+      </form>
+
+      <aside class="space-y-10">
+        <div>
+          <Eyebrow>Call or email</Eyebrow>
+          <a href={siteConfig.business.phoneHref} class="mt-4 block text-[length:var(--step-2)] text-moss">
+            {siteConfig.business.phone}
+          </a>
+          <a href={`mailto:${siteConfig.business.email}`} class="block text-ink-muted">{siteConfig.business.email}</a>
+        </div>
+        <div>
+          <Eyebrow>Hours</Eyebrow>
+          <ul class="mt-4 space-y-1 text-ink-muted">
+            {siteConfig.business.hours.map((line) => <li>{line}</li>)}
+          </ul>
+        </div>
+        <div>
+          <Eyebrow>Service area</Eyebrow>
+          <ul class="mt-4 space-y-1">
+            {areas.map((area) => (
+              <li><a href={`/areas/${area.id}`} class="text-ink-muted hover:text-moss">{area.data.town}, {area.data.state}</a></li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </Container>
+</PageLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const started = document.getElementById('startedAt') as HTMLInputElement | null;
+  const status = document.getElementById('form-status');
+  const formError = document.getElementById('form-error');
+
+  if (form && started && status && formError) {
+    started.value = String(Date.now());
+
+    const showErrors = (errors: Record<string, string>) => {
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((node) => {
+        node.textContent = '';
+        node.classList.add('hidden');
+      });
+      formError.classList.add('hidden');
+
+      for (const [field, message] of Object.entries(errors)) {
+        const node = form.querySelector<HTMLElement>(`[data-error-for="${field}"]`);
+        if (node) {
+          node.textContent = message;
+          node.classList.remove('hidden');
+        } else {
+          formError.textContent = message;
+          formError.classList.remove('hidden');
+        }
+      }
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { accept: 'application/json' },
+        body: new FormData(form),
+      });
+      const payload = await response.json();
+
+      if (payload.ok) {
+        form.reset();
+        started.value = String(Date.now());
+        showErrors({});
+        status.textContent = 'Thank you — your message is in. I usually reply within a day.';
+        status.classList.remove('hidden');
+      } else {
+        status.classList.add('hidden');
+        showErrors(payload.errors ?? { form: 'Something went wrong. Please call instead.' });
+      }
+    });
+  }
+</script>

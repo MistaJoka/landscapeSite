@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/primitives/Container.astro';
+import Button from '../components/primitives/Button.astro';
+---
+<BaseLayout title="Page not found" noindex>
+  <Container width="text" class="py-32 text-center">
+    <h1 class="text-[length:var(--step-5)]">That page is not here.</h1>
+    <p class="mt-6 text-[length:var(--step-1)] text-ink-muted">
+      It may have moved, or the link may be wrong. The work, services, and contact pages are all still where they were.
+    </p>
+    <div class="mt-10 flex flex-wrap justify-center gap-4">
+      <Button href="/">Back home</Button>
+      <Button href="/services" variant="ghost">See services</Button>
+    </div>
+  </Container>
+</BaseLayout>
