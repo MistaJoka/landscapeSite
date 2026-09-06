@@ -1,0 +1,30 @@
+:root {
+  --ink: #16181A;
+  --ink-muted: #5C6169;
+  --paper: #FAF9F6;
+  --paper-raised: #FFFFFF;
+  --moss: #3F5641;
+  --moss-deep: #2C3D2E;
+  --stone: #D6D1C7;
+
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+
+  --measure: 68ch;
+  --container: 80rem;
+  --container-text: 42.5rem;
+
+  --step--1: clamp(0.83rem, 0.79rem + 0.20vw, 0.94rem);
+  --step-0:  clamp(1.00rem, 0.94rem + 0.30vw, 1.19rem);
+  --step-1:  clamp(1.20rem, 1.10rem + 0.50vw, 1.50rem);
+  --step-2:  clamp(1.44rem, 1.28rem + 0.80vw, 1.89rem);
+  --step-3:  clamp(1.73rem, 1.48rem + 1.25vw, 2.38rem);
+  --step-4:  clamp(2.07rem, 1.70rem + 1.87vw, 3.00rem);
+  --step-5:  clamp(2.49rem, 1.94rem + 2.75vw, 3.78rem);
+  --step-6:  clamp(2.99rem, 2.19rem + 3.98vw, 4.77rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 420ms;
+  --dur-slow: 720ms;
+}
