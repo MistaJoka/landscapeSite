@@ -7,6 +7,11 @@ import SkipLink from '../components/layout/SkipLink.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
 import Meta from '../components/seo/Meta.astro';
 import { localBusinessJsonLd } from '../lib/schema';
+// Both faces use font-display: swap, so without preloading them the fallback
+// paints first and the display headline reflows when the real font arrives —
+// measurable layout shift on a cold, CPU-throttled connection.
+import instrumentSerif from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
+import interVariable from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 
 interface Props {
@@ -29,6 +34,8 @@ const schema = [localBusinessJsonLd(Astro.site), ...extra];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" type="font/woff2" href={instrumentSerif} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interVariable} crossorigin />
     <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
     {isStaticDemo && <meta name="robots" content="noindex, nofollow" />}
     <Meta title={title} description={description} ogImage={ogImage} noindex={noindex} />
